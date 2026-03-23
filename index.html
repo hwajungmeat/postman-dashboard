@@ -163,6 +163,46 @@ body{background:var(--bg);color:var(--txt);font-family:'Noto Sans KR',sans-serif
 .msel-btn{padding:5px 12px;border-radius:99px;font-size:11px;border:1px solid var(--line2);background:var(--bg3);color:var(--txt3);cursor:pointer;font-family:inherit;transition:all 0.15s}
 .msel-btn.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700}
 
+/* WRITE FORM */
+.wtab-bar{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:20px}
+.wtab{padding:8px 18px;font-size:12px;font-weight:500;color:var(--txt3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color 0.15s;background:none;border-top:none;border-left:none;border-right:none;font-family:'Noto Sans KR',sans-serif}
+.wtab.active{color:var(--txt);border-bottom-color:var(--accent)}
+.wpane{display:none}.wpane.active{display:block}
+.w-top{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--txt);padding-bottom:8px;margin-bottom:16px}
+.w-topleft{font-size:18px;font-weight:700;color:var(--txt)}
+.w-topright{font-size:13px;font-weight:500;letter-spacing:0.08em;color:var(--txt3)}
+.w-meta{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.w-no-label{font-size:11px;font-weight:700;background:var(--bg3);border:1px solid var(--line2);border-radius:var(--r2);padding:3px 10px;color:var(--txt3)}
+.w-no-inp{border:none;border-bottom:1px solid var(--line2);background:transparent;font-size:12px;color:var(--txt);width:64px;padding:2px 4px;outline:none;font-family:'Noto Sans KR',sans-serif}
+.w-date{font-size:11px;color:var(--txt3);margin-left:auto;font-family:'DM Mono',monospace}
+.w-grid{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:16px;margin-bottom:16px}
+.w-lcol{display:flex;flex-direction:column;gap:14px}
+.w-slabel{font-size:11px;font-weight:500;color:var(--txt2);margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.w-slabel::before{content:"■";font-size:9px;color:var(--txt3)}
+.w-iboxrow{display:flex;gap:4px;margin-bottom:6px}
+.w-ibox{width:26px;height:26px;border:1px solid var(--line2);border-radius:4px;background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--txt3);transition:background 0.12s;user-select:none;font-family:'DM Mono',monospace}
+.w-ibox.on{background:rgba(200,169,110,0.2);color:var(--accent);border-color:var(--accent2);font-weight:700}
+.w-ta{width:100%;border:none;border-bottom:1px solid var(--line);background:transparent;font-size:12px;color:var(--txt);font-family:'Noto Sans KR',sans-serif;resize:none;outline:none;line-height:1.7;padding:3px 0;min-height:46px}
+.w-ta::placeholder{color:var(--txt3)}
+.w-care{background:var(--bg3);border:1px solid var(--line2);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;gap:7px}
+.w-ctitle{font-size:11px;font-weight:700;color:var(--txt);display:flex;align-items:center;gap:5px;margin-bottom:2px;letter-spacing:0.04em}
+.w-crow{display:flex;flex-direction:column;gap:2px}
+.w-clabel{font-size:9px;color:var(--txt3);font-weight:700;letter-spacing:0.06em;margin-bottom:1px}
+.w-cinp{border:none;border-bottom:1px solid var(--line);background:transparent;font-size:11px;color:var(--txt);font-family:'Noto Sans KR',sans-serif;padding:2px 0;outline:none;width:100%;margin-top:2px}
+.w-cinp::placeholder{color:var(--txt3);font-size:10px}
+.w-chkrow{display:flex;align-items:center;gap:7px}
+.w-chk{width:14px;height:14px;border:1px solid var(--line2);border-radius:3px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--bg4)}
+.w-chk.on{background:rgba(200,169,110,0.2);border-color:var(--accent)}
+.w-chklabel{font-size:11px;color:var(--txt2)}
+.w-divhr{height:1px;background:var(--line);margin:2px 0}
+.w-bgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-bottom:12px}
+.w-btnstrip{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.w-abtn{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--line2);border-radius:var(--r2);padding:7px 12px;font-size:12px;color:var(--txt2);cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:background 0.12s;white-space:nowrap}
+.w-abtn:hover{background:var(--bg3);color:var(--txt)}
+.w-abtn.primary{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.w-abtn.primary:hover{opacity:0.85}
+.w-msg{font-size:11px;color:var(--green);margin-top:6px;min-height:16px}
+
 /* MINI CALENDAR */
 .mini-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:20px}
 .cal-head{font-size:9px;color:var(--txt3);text-align:center;padding:4px 0;font-weight:700}
@@ -278,17 +318,126 @@ input,textarea,select{font-family:'Noto Sans KR',sans-serif}
         </div>
       </div>
 
-      <!-- HISTORY -->
+      <!-- HISTORY = WRITE + LIST -->
       <div id="panel-history" class="panel">
-        <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
-          <input id="hist-search" placeholder="날짜 또는 성과 검색..." style="flex:1;background:var(--bg2);border:1px solid var(--line2);border-radius:var(--r2);padding:8px 12px;font-size:12px;color:var(--txt);outline:none"/>
-          <button class="tbtn" onclick="renderHistory()">검색</button>
+        <div class="wtab-bar">
+          <button class="wtab active" onclick="switchWtab('write',this)">일지 작성</button>
+          <button class="wtab" onclick="switchWtab('list',this)">기록 목록</button>
         </div>
-        <div class="htable-wrap">
-          <table class="htable">
-            <thead><tr><th>날짜</th><th>No.</th><th>인사이트</th><th>전화</th><th>SNS</th><th>선물</th><th>Care Note</th><th>성과</th><th></th></tr></thead>
-            <tbody id="hist-tbody"></tbody>
-          </table>
+
+        <!-- WRITE PANE -->
+        <div id="wpane-write" class="wpane active">
+          <div class="w-top">
+            <span class="w-topleft">Daily Note</span>
+            <span class="w-topright">POSTMAN</span>
+          </div>
+          <div class="w-meta">
+            <span class="w-no-label">No.</span>
+            <input class="w-no-inp" id="w-no" placeholder="001"/>
+            <span class="w-date" id="w-date"></span>
+          </div>
+
+          <div class="w-grid">
+            <div class="w-lcol">
+              <div>
+                <div class="w-slabel">오늘의 인사이트를 기록하라</div>
+                <div class="w-iboxrow" id="w-iboxes">
+                  <div class="w-ibox" data-i="0">1</div><div class="w-ibox" data-i="1">2</div>
+                  <div class="w-ibox" data-i="2">3</div><div class="w-ibox" data-i="3">4</div>
+                  <div class="w-ibox" data-i="4">5</div>
+                </div>
+                <textarea class="w-ta" id="w-insight" rows="2" placeholder="오늘 새롭게 깨달은 것..."></textarea>
+              </div>
+              <div>
+                <div class="w-slabel">인간 관계에서 생산적인 일은 무엇인가?</div>
+                <textarea class="w-ta" id="w-relation" rows="2" placeholder="오늘 관계에서 가치 있었던 일..."></textarea>
+              </div>
+              <div>
+                <div class="w-slabel">전달할 정보가 있는가? 누구에게?</div>
+                <textarea class="w-ta" id="w-info" rows="2" placeholder="공유할 내용 / 대상..."></textarea>
+              </div>
+            </div>
+
+            <div>
+              <div class="w-care">
+                <div class="w-ctitle">
+                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><polyline points="1,5.5 4,8.5 10,2" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  Care Note
+                </div>
+                <div class="w-chkrow">
+                  <div class="w-chk" onclick="wToggleChk(this)"></div>
+                  <span class="w-chklabel">손편지 or 카톡 1명</span>
+                </div>
+                <div class="w-crow"><div class="w-clabel">→ 대상</div><input class="w-cinp" id="w-letter" placeholder="이름"/></div>
+                <div class="w-divhr"></div>
+                <div class="w-crow">
+                  <div class="w-clabel">전화 5명</div>
+                  <input class="w-cinp" id="w-call1" placeholder="1."/><input class="w-cinp" id="w-call2" placeholder="2."/>
+                  <input class="w-cinp" id="w-call3" placeholder="3."/><input class="w-cinp" id="w-call4" placeholder="4."/>
+                  <input class="w-cinp" id="w-call5" placeholder="5."/>
+                </div>
+                <div class="w-divhr"></div>
+                <div class="w-crow">
+                  <div class="w-clabel">SNS / 댓글 5명</div>
+                  <input class="w-cinp" id="w-sns1" placeholder="1."/><input class="w-cinp" id="w-sns2" placeholder="2."/>
+                  <input class="w-cinp" id="w-sns3" placeholder="3."/><input class="w-cinp" id="w-sns4" placeholder="4."/>
+                  <input class="w-cinp" id="w-sns5" placeholder="5."/>
+                </div>
+                <div class="w-divhr"></div>
+                <div class="w-crow">
+                  <div class="w-clabel">선물 5명</div>
+                  <input class="w-cinp" id="w-gift1" placeholder="1."/><input class="w-cinp" id="w-gift2" placeholder="2."/>
+                  <input class="w-cinp" id="w-gift3" placeholder="3."/><input class="w-cinp" id="w-gift4" placeholder="4."/>
+                  <input class="w-cinp" id="w-gift5" placeholder="5."/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-lcol" style="gap:12px">
+            <div>
+              <div class="w-slabel">잘했다고 생각하는가? 그 이유는?</div>
+              <textarea class="w-ta" id="w-well" rows="2" placeholder="스스로 칭찬하고 싶은 일..."></textarea>
+            </div>
+            <div class="w-bgrid">
+              <div><div class="w-slabel">오늘의 성과는?</div><textarea class="w-ta" id="w-result" rows="2" placeholder="수치나 구체적 결과..."></textarea></div>
+              <div><div class="w-slabel">나의 강점과 자원은?</div><textarea class="w-ta" id="w-strength" rows="2" placeholder="활용한 강점..."></textarea></div>
+            </div>
+            <div>
+              <div class="w-slabel">성과의 근원 & 감사 표현</div>
+              <textarea class="w-ta" id="w-thanks" rows="2" placeholder="감사한 사람 / 표현 방법..."></textarea>
+            </div>
+            <div class="w-bgrid">
+              <div><div class="w-slabel">내일 해야 할 일은?</div><textarea class="w-ta" id="w-tomorrow" rows="2" placeholder="내일 반드시 할 일 3가지..."></textarea></div>
+              <div style="margin-top:18px;display:flex;flex-direction:column;gap:5px">
+                <div style="font-size:9px;color:var(--txt3);font-weight:700;letter-spacing:0.06em">완료 체크</div>
+                <div class="w-chkrow"><div class="w-chk" onclick="wToggleChk(this)"></div><span class="w-chklabel">Care Note 완료</span></div>
+                <div class="w-chkrow"><div class="w-chk" onclick="wToggleChk(this)"></div><span class="w-chklabel">인사이트 기록</span></div>
+                <div class="w-chkrow"><div class="w-chk" onclick="wToggleChk(this)"></div><span class="w-chklabel">내일 준비 완료</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="w-btnstrip">
+            <button class="w-abtn primary" onclick="wSaveEntry()">저장하기</button>
+            <button class="w-abtn" onclick="wCopyNotion()">노션에 복사 ↗</button>
+            <button class="w-abtn" onclick="wReset()" style="margin-left:auto;color:var(--txt3)">초기화</button>
+          </div>
+          <div class="w-msg" id="w-msg"></div>
+        </div>
+
+        <!-- LIST PANE -->
+        <div id="wpane-list" class="wpane">
+          <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
+            <input id="hist-search" placeholder="날짜 또는 성과 검색..." style="flex:1;background:var(--bg2);border:1px solid var(--line2);border-radius:var(--r2);padding:8px 12px;font-size:12px;color:var(--txt);outline:none;font-family:'Noto Sans KR',sans-serif"/>
+            <button class="tbtn" onclick="renderHistory()">검색</button>
+          </div>
+          <div class="htable-wrap">
+            <table class="htable">
+              <thead><tr><th>날짜</th><th>No.</th><th>인사이트</th><th>전화</th><th>SNS</th><th>선물</th><th>Care Note</th><th>성과</th><th></th></tr></thead>
+              <tbody id="hist-tbody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -436,7 +585,7 @@ function notify(msg){
 // NAV
 const pageMeta={
   overview:['개요','전체 활동 현황'],
-  history:['일지 기록','전체 작성 내역'],
+  history:['일지 기록','일지 작성 및 전체 내역'],
   calendar:['캘린더','날짜별 작성 현황'],
   buttons:['버튼 자동화','노션 자동화 설정'],
   tags:['고객/인맥 태그','태그 관리 및 연동'],
@@ -508,7 +657,95 @@ function renderOverview(){
   }).join('');
 }
 
-// HISTORY
+// WRITE FORM
+function switchWtab(name, el){
+  document.querySelectorAll('.wtab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.wpane').forEach(p=>p.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('wpane-'+name).classList.add('active');
+  if(name==='list') renderHistory();
+}
+
+// init write date
+(function(){
+  const wd=document.getElementById('w-date');
+  if(wd) wd.textContent=fmtDate(now);
+  const arr=getEntries();
+  const wno=document.getElementById('w-no');
+  if(wno) wno.value=String(arr.length+1).padStart(3,'0');
+})();
+
+document.querySelectorAll('.w-ibox').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const i=parseInt(b.dataset.i);
+    document.querySelectorAll('.w-ibox').forEach((x,j)=>x.classList.toggle('on',j<=i));
+  });
+});
+
+function wToggleChk(el){
+  el.classList.toggle('on');
+  el.innerHTML=el.classList.contains('on')
+    ?'<svg width="9" height="9" viewBox="0 0 9 9"><polyline points="1,4.5 3.5,7 8,2" stroke="'+getComputedStyle(document.documentElement).getPropertyValue('--accent')+'" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>'
+    :'';
+}
+
+function wg(id){return(document.getElementById(id)||{}).value||'';}
+
+function wShowMsg(txt){
+  const el=document.getElementById('w-msg');
+  el.textContent=txt; setTimeout(()=>el.textContent='',3000);
+}
+
+function wSaveEntry(){
+  const ic=document.querySelectorAll('.w-ibox.on').length;
+  const entry={
+    date:fmtDate(now),
+    no:wg('w-no')||String(getEntries().length+1).padStart(3,'0'),
+    insight:ic,
+    insight_txt:wg('w-insight'),
+    relation:wg('w-relation'),
+    info:wg('w-info'),
+    letter:!!wg('w-letter'),
+    letter_name:wg('w-letter'),
+    calls:[wg('w-call1'),wg('w-call2'),wg('w-call3'),wg('w-call4'),wg('w-call5')].filter(Boolean).length,
+    call_names:[wg('w-call1'),wg('w-call2'),wg('w-call3'),wg('w-call4'),wg('w-call5')],
+    sns:[wg('w-sns1'),wg('w-sns2'),wg('w-sns3'),wg('w-sns4'),wg('w-sns5')].filter(Boolean).length,
+    sns_names:[wg('w-sns1'),wg('w-sns2'),wg('w-sns3'),wg('w-sns4'),wg('w-sns5')],
+    gifts:[wg('w-gift1'),wg('w-gift2'),wg('w-gift3'),wg('w-gift4'),wg('w-gift5')].filter(Boolean).length,
+    gift_names:[wg('w-gift1'),wg('w-gift2'),wg('w-gift3'),wg('w-gift4'),wg('w-gift5')],
+    well:wg('w-well'),
+    result:wg('w-result'),
+    strength:wg('w-strength'),
+    thanks:wg('w-thanks'),
+    tomorrow:wg('w-tomorrow'),
+    ts:Date.now()
+  };
+  const arr=getEntries();
+  const idx=arr.findIndex(e=>e.date===entry.date);
+  if(idx>=0) arr[idx]=entry; else arr.unshift(entry);
+  setEntries(arr);
+  document.getElementById('streak-num').textContent=calcStreak();
+  renderOverview();
+  wShowMsg('저장되었습니다.');
+  notify('일지가 저장되었습니다.');
+}
+
+function wCopyNotion(){
+  const ic=document.querySelectorAll('.w-ibox.on').length;
+  const no=wg('w-no')||'001';
+  const txt=`# Daily Note — ${fmtDate(now)}  (No. ${no})\n\n## ■ 오늘의 인사이트 (${ic}/5)\n${wg('w-insight')}\n\n## ■ 인간 관계에서 생산적인 일\n${wg('w-relation')}\n\n## ■ 전달할 정보\n${wg('w-info')}\n\n---\n\n## Care Note\n- 손편지/카톡: ${wg('w-letter')}\n- 전화: ${wg('w-call1')} / ${wg('w-call2')} / ${wg('w-call3')} / ${wg('w-call4')} / ${wg('w-call5')}\n- SNS: ${wg('w-sns1')} / ${wg('w-sns2')} / ${wg('w-sns3')} / ${wg('w-sns4')} / ${wg('w-sns5')}\n- 선물: ${wg('w-gift1')} / ${wg('w-gift2')} / ${wg('w-gift3')} / ${wg('w-gift4')} / ${wg('w-gift5')}\n\n---\n\n## ■ 잘한 이유\n${wg('w-well')}\n\n## ■ 오늘의 성과\n${wg('w-result')}\n\n## ■ 강점과 자원\n${wg('w-strength')}\n\n## ■ 감사 표현\n${wg('w-thanks')}\n\n## ■ 내일 할 일\n${wg('w-tomorrow')}`;
+  navigator.clipboard.writeText(txt).then(()=>wShowMsg('클립보드에 복사되었습니다.'));
+}
+
+function wReset(){
+  document.querySelectorAll('.w-ta').forEach(t=>t.value='');
+  document.querySelectorAll('.w-cinp,.w-no-inp').forEach(i=>i.value='');
+  document.querySelectorAll('.w-ibox').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.w-chk').forEach(c=>{c.classList.remove('on');c.innerHTML='';});
+  wShowMsg('초기화되었습니다.');
+}
+
+
 function renderHistory(){
   const q=(document.getElementById('hist-search')||{}).value||'';
   const arr=getEntries().filter(e=>!q||(e.date.includes(q)||(e.result||'').includes(q)));
@@ -694,16 +931,14 @@ function copyCode(){
   navigator.clipboard.writeText(document.getElementById('notion-code').textContent).then(()=>notify('복사되었습니다. 노션에 붙여넣기 하세요.'));
 }
 
-// NEW ENTRY (demo)
+// NEW ENTRY — navigate to write tab
 function newEntry(){
-  const date=fmtDate(now);
-  const arr=getEntries();
-  if(arr.find(e=>e.date===date)){notify('오늘 일지가 이미 저장되어 있습니다.');return;}
-  const entry={date,no:String(arr.length+1).padStart(3,'0'),insight:3,letter:false,calls:0,sns:0,gifts:0,result:'',tomorrow:'',ts:Date.now()};
-  arr.unshift(entry); setEntries(arr);
-  notify('오늘 일지 페이지가 생성되었습니다!');
-  renderOverview();
-  document.getElementById('streak-num').textContent=calcStreak();
+  const navEl=document.querySelector('.nav-item[onclick*="history"]');
+  gotoPanel('history', navEl);
+  setTimeout(()=>{
+    const tab=document.querySelector('.wtab');
+    switchWtab('write', tab);
+  },50);
 }
 
 // EXPORT
