@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>화정고기 — Postman Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0e0f11;
+  --bg2:#16181c;
+  --bg3:#1e2026;
+  --bg4:#262830;
+  --line:#2e3038;
+  --line2:#3a3d47;
+  --txt:#e8e9ec;
+  --txt2:#9498a6;
+  --txt3:#5c6070;
+  --accent:#c8a96e;
+  --accent2:#a8894e;
+  --blue:#4a8eff;
+  --green:#3ecf8e;
+  --red:#ff6b6b;
+  --amber:#f5a623;
+  --r:10px;
+  --r2:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:'Noto Sans KR',sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+::selection{background:var(--accent);color:#000}
+
+/* scrollbar */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:2px}
+
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:0}
+.brand{padding:28px 20px 20px;border-bottom:1px solid var(--line)}
+.brand-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.brand-icon{width:32px;height:32px;background:var(--accent);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#000;font-family:'DM Mono',monospace;flex-shrink:0}
+.brand-name{font-size:13px;font-weight:700;color:var(--txt);letter-spacing:0.04em}
+.brand-sub{font-size:10px;color:var(--txt3);letter-spacing:0.06em;margin-top:1px}
+.brand-date{font-size:11px;color:var(--txt3);font-family:'DM Mono',monospace;margin-top:8px}
+
+.nav{padding:16px 0;flex:1}
+.nav-section{padding:0 12px;margin-bottom:4px}
+.nav-section-label{font-size:9px;font-weight:700;color:var(--txt3);letter-spacing:0.1em;padding:0 8px;margin-bottom:4px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 8px;border-radius:var(--r2);cursor:pointer;transition:background 0.15s;color:var(--txt2);font-size:12px;font-weight:400;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--bg3);color:var(--txt)}
+.nav-item.active{background:var(--bg4);color:var(--txt);font-weight:500}
+.nav-item svg{flex-shrink:0;opacity:0.7}
+.nav-item.active svg{opacity:1}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+.sidebar-bottom{padding:16px;border-top:1px solid var(--line)}
+.today-streak{background:var(--bg3);border:1px solid var(--line2);border-radius:var(--r);padding:12px;text-align:center}
+.streak-num{font-size:28px;font-weight:700;color:var(--accent);font-family:'DM Mono',monospace;line-height:1}
+.streak-label{font-size:10px;color:var(--txt3);margin-top:4px}
+
+/* MAIN */
+.main{display:flex;flex-direction:column;overflow:hidden}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--line);background:var(--bg);flex-shrink:0}
+.page-title{font-size:18px;font-weight:700;color:var(--txt);letter-spacing:-0.02em}
+.page-sub{font-size:12px;color:var(--txt3);margin-top:2px}
+.topbar-actions{display:flex;gap:8px}
+.tbtn{padding:7px 14px;border-radius:var(--r2);font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--line2);background:var(--bg3);color:var(--txt2);font-family:'Noto Sans KR',sans-serif;transition:all 0.15s}
+.tbtn:hover{background:var(--bg4);color:var(--txt)}
+.tbtn.primary{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+.tbtn.primary:hover{background:var(--accent2)}
+
+.content{flex:1;overflow-y:auto;padding:24px 28px}
+
+/* PANELS */
+.panel{display:none}
+.panel.active{display:block}
+
+/* STAT GRID */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.scard{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.scard-label{font-size:10px;color:var(--txt3);font-weight:500;letter-spacing:0.06em;margin-bottom:8px}
+.scard-val{font-size:26px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;margin-bottom:4px}
+.scard-sub{font-size:11px;color:var(--txt3)}
+.scard-val.gold{color:var(--accent)}
+.scard-val.blue{color:var(--blue)}
+.scard-val.green{color:var(--green)}
+.scard-val.amber{color:var(--amber)}
+
+/* SECTION TITLES */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-title{font-size:13px;font-weight:700;color:var(--txt);letter-spacing:0.02em}
+.sec-action{font-size:11px;color:var(--txt3);cursor:pointer;border:none;background:none;font-family:inherit;padding:4px 8px;border-radius:4px;transition:color 0.15s}
+.sec-action:hover{color:var(--accent)}
+
+/* CARE NOTE BARS */
+.care-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.care-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.care-item{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.care-item:last-child{margin-bottom:0}
+.care-name{font-size:11px;color:var(--txt2);width:90px;flex-shrink:0}
+.care-bar-bg{flex:1;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.care-bar-fill{height:100%;border-radius:3px;transition:width 0.6s ease}
+.care-pct{font-size:11px;font-family:'DM Mono',monospace;color:var(--txt2);width:34px;text-align:right;flex-shrink:0}
+
+/* HISTORY TABLE */
+.htable-wrap{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:20px}
+.htable{width:100%;border-collapse:collapse}
+.htable th{font-size:10px;font-weight:700;color:var(--txt3);letter-spacing:0.06em;text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--bg3)}
+.htable td{padding:10px 14px;font-size:12px;color:var(--txt2);border-bottom:1px solid var(--line)}
+.htable tr:last-child td{border-bottom:none}
+.htable tr:hover td{background:var(--bg3);color:var(--txt)}
+.badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:0.02em}
+.b-done{background:rgba(62,207,142,0.15);color:var(--green)}
+.b-part{background:rgba(245,166,35,0.15);color:var(--amber)}
+.b-none{background:var(--bg4);color:var(--txt3)}
+
+/* BUTTONS PANEL */
+.btn-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:20px}
+.action-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:20px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.action-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent) 0%,transparent 60%);opacity:0;transition:opacity 0.2s}
+.action-card:hover{border-color:var(--line2);transform:translateY(-1px)}
+.action-card:hover::before{opacity:0.04}
+.action-card:active{transform:scale(0.99)}
+.ac-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.ac-title{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:5px}
+.ac-desc{font-size:11px;color:var(--txt3);line-height:1.5}
+.ac-badge{display:inline-block;margin-top:10px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px}
+
+/* TAG PANEL */
+.tag-section{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.tag-section-title{font-size:11px;font-weight:700;color:var(--txt3);letter-spacing:0.06em;margin-bottom:10px}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:6px}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:99px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--line2);background:var(--bg3);color:var(--txt2);transition:all 0.15s}
+.tag:hover{border-color:var(--line2);background:var(--bg4);color:var(--txt)}
+.tag.active{background:var(--accent);border-color:var(--accent);color:#000}
+.tag-count{font-size:9px;opacity:0.7;font-family:'DM Mono',monospace}
+.tag-add{display:flex;gap:8px;margin-top:12px}
+.tag-inp{flex:1;background:var(--bg3);border:1px solid var(--line2);border-radius:var(--r2);padding:7px 12px;font-size:12px;color:var(--txt);font-family:'Noto Sans KR',sans-serif;outline:none;transition:border-color 0.15s}
+.tag-inp:focus{border-color:var(--line2)}
+.tag-inp::placeholder{color:var(--txt3)}
+
+/* MONTHLY REVIEW */
+.review-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:14px}
+.review-meta{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.review-month{font-size:20px;font-weight:700;color:var(--txt);font-family:'DM Mono',monospace}
+.review-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;background:rgba(200,169,110,0.15);color:var(--accent)}
+.review-body{font-size:12px;color:var(--txt2);line-height:1.9;white-space:pre-wrap}
+.review-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.kpi-item{text-align:center}
+.kpi-val{font-size:18px;font-weight:700;font-family:'DM Mono',monospace;color:var(--accent)}
+.kpi-label{font-size:10px;color:var(--txt3);margin-top:2px}
+
+/* NOTIFY */
+.notify{position:fixed;bottom:24px;right:24px;background:var(--bg3);border:1px solid var(--line2);border-radius:var(--r);padding:12px 16px;font-size:12px;color:var(--txt);box-shadow:0 8px 32px rgba(0,0,0,0.4);transform:translateY(80px);opacity:0;transition:all 0.3s;z-index:999;max-width:260px}
+.notify.show{transform:translateY(0);opacity:1}
+.notify-icon{color:var(--green);font-weight:700;margin-right:6px}
+
+/* MONTHLY SELECTOR */
+.month-sel{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.msel-btn{padding:5px 12px;border-radius:99px;font-size:11px;border:1px solid var(--line2);background:var(--bg3);color:var(--txt3);cursor:pointer;font-family:inherit;transition:all 0.15s}
+.msel-btn.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700}
+
+/* MINI CALENDAR */
+.mini-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:20px}
+.cal-head{font-size:9px;color:var(--txt3);text-align:center;padding:4px 0;font-weight:700}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:10px;border-radius:4px;cursor:pointer;color:var(--txt3);font-family:'DM Mono',monospace;transition:background 0.12s}
+.cal-day.has-entry{background:rgba(200,169,110,0.2);color:var(--accent);font-weight:500}
+.cal-day.today{background:var(--accent);color:#000;font-weight:700}
+.cal-day.empty{pointer-events:none}
+
+input,textarea,select{font-family:'Noto Sans KR',sans-serif}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-top">
+        <div class="brand-icon">P</div>
+        <div>
+          <div class="brand-name">POSTMAN</div>
+          <div class="brand-sub">화정고기 대시보드</div>
+        </div>
+      </div>
+      <div class="brand-date" id="brand-date"></div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">
+        <div class="nav-section-label">메인</div>
+        <button class="nav-item active" onclick="gotoPanel('overview',this)">
+          <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="8" y="1" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="8" y="8" width="5" height="5" rx="1.5" stroke="currentColor" stroke-width="1.3"/></svg>
+          개요
+        </button>
+        <button class="nav-item" onclick="gotoPanel('history',this)">
+          <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><rect x="1" y="2.5" width="12" height="1.2" rx="0.6" fill="currentColor"/><rect x="1" y="6.4" width="12" height="1.2" rx="0.6" fill="currentColor"/><rect x="1" y="10.3" width="8" height="1.2" rx="0.6" fill="currentColor"/></svg>
+          일지 기록
+        </button>
+        <button class="nav-item" onclick="gotoPanel('calendar',this)">
+          <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><rect x="1" y="2" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 5.5h12" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 1v2.5M9.5 1v2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          캘린더
+        </button>
+      </div>
+      <div class="nav-section" style="margin-top:8px">
+        <div class="nav-section-label">자동화</div>
+        <button class="nav-item" onclick="gotoPanel('buttons',this)">
+          <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M5.5 2.5L9 7l-3.5 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          버튼 자동화
+        </button>
+        <button class="nav-item" onclick="gotoPanel('tags',this)">
+          <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M1.5 7.5L6 3h6v6l-4.5 4.5-6-6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="9.5" cy="5.5" r="1" fill="currentColor"/></svg>
+          고객/인맥 태그
+        </button>
+        <button class="nav-item" onclick="gotoPanel('review',this)">
+          <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M2 12l2.5-2.5M9 3l2 2-6 6-2.5.5.5-2.5L9 3z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          월간 리뷰
+        </button>
+      </div>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="today-streak">
+        <div class="streak-num" id="streak-num">0</div>
+        <div class="streak-label">일 연속 작성</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="page-title" id="page-title">개요</div>
+        <div class="page-sub" id="page-sub">전체 활동 현황</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="tbtn" onclick="exportCSV()">내보내기</button>
+        <button class="tbtn primary" onclick="newEntry()">+ 오늘 일지 작성</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- OVERVIEW -->
+      <div id="panel-overview" class="panel active">
+        <div class="stat-row">
+          <div class="scard"><div class="scard-label">총 작성 일지</div><div class="scard-val gold" id="ov-total">0</div><div class="scard-sub">누적</div></div>
+          <div class="scard"><div class="scard-label">Care Note 완료</div><div class="scard-val green" id="ov-care">0</div><div class="scard-sub">완료일</div></div>
+          <div class="scard"><div class="scard-label">평균 인사이트</div><div class="scard-val blue" id="ov-insight">0.0</div><div class="scard-sub">/ 5점 평균</div></div>
+          <div class="scard"><div class="scard-label">이번 달 작성</div><div class="scard-val amber" id="ov-month">0</div><div class="scard-sub">일</div></div>
+        </div>
+
+        <div class="care-grid">
+          <div class="care-card">
+            <div class="sec-head"><span class="sec-title">Care Note 항목별 완료율</span></div>
+            <div class="care-item"><span class="care-name">손편지/카톡</span><div class="care-bar-bg"><div class="care-bar-fill" id="cb-letter" style="width:0%;background:var(--accent)"></div></div><span class="care-pct" id="cp-letter">0%</span></div>
+            <div class="care-item"><span class="care-name">전화 5명</span><div class="care-bar-bg"><div class="care-bar-fill" id="cb-call" style="width:0%;background:var(--blue)"></div></div><span class="care-pct" id="cp-call">0%</span></div>
+            <div class="care-item"><span class="care-name">SNS/댓글 5명</span><div class="care-bar-bg"><div class="care-bar-fill" id="cb-sns" style="width:0%;background:var(--green)"></div></div><span class="care-pct" id="cp-sns">0%</span></div>
+            <div class="care-item"><span class="care-name">선물 5명</span><div class="care-bar-bg"><div class="care-bar-fill" id="cb-gift" style="width:0%;background:var(--amber)"></div></div><span class="care-pct" id="cp-gift">0%</span></div>
+          </div>
+          <div class="care-card">
+            <div class="sec-head"><span class="sec-title">최근 7일 인사이트 추이</span></div>
+            <canvas id="chart-insight" height="110"></canvas>
+          </div>
+        </div>
+
+        <div class="sec-head"><span class="sec-title">최근 기록</span><button class="sec-action" onclick="gotoPanel('history',null)">전체 보기 →</button></div>
+        <div class="htable-wrap">
+          <table class="htable">
+            <thead><tr><th>날짜</th><th>No.</th><th>인사이트</th><th>Care Note</th><th>성과 한 줄</th></tr></thead>
+            <tbody id="ov-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- HISTORY -->
+      <div id="panel-history" class="panel">
+        <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
+          <input id="hist-search" placeholder="날짜 또는 성과 검색..." style="flex:1;background:var(--bg2);border:1px solid var(--line2);border-radius:var(--r2);padding:8px 12px;font-size:12px;color:var(--txt);outline:none"/>
+          <button class="tbtn" onclick="renderHistory()">검색</button>
+        </div>
+        <div class="htable-wrap">
+          <table class="htable">
+            <thead><tr><th>날짜</th><th>No.</th><th>인사이트</th><th>전화</th><th>SNS</th><th>선물</th><th>Care Note</th><th>성과</th><th></th></tr></thead>
+            <tbody id="hist-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CALENDAR -->
+      <div id="panel-calendar" class="panel">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <button class="tbtn" onclick="changeMonth(-1)">◀</button>
+          <span style="font-size:16px;font-weight:700;font-family:'DM Mono',monospace;color:var(--txt)" id="cal-month-label"></span>
+          <button class="tbtn" onclick="changeMonth(1)">▶</button>
+        </div>
+        <div class="mini-cal" id="mini-cal"></div>
+        <div id="cal-detail" style="background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:none">
+          <div style="font-size:13px;font-weight:700;color:var(--txt);margin-bottom:8px" id="cal-detail-date"></div>
+          <div style="font-size:12px;color:var(--txt2);line-height:1.8" id="cal-detail-body"></div>
+        </div>
+      </div>
+
+      <!-- BUTTONS -->
+      <div id="panel-buttons" class="panel">
+        <div style="background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:20px;font-size:12px;color:var(--txt3);line-height:1.7">
+          아래 버튼들은 <strong style="color:var(--accent)">노션(Notion)</strong>에서 직접 설정하는 자동화 기능입니다. 각 카드의 설정 코드를 복사해 노션 버튼 설정에 붙여넣으세요.
+        </div>
+        <div class="btn-grid">
+          <div class="action-card" onclick="runAutoBtn('new-entry')">
+            <div class="ac-icon" style="background:rgba(74,142,255,0.15)"><svg width="18" height="18" fill="none" viewBox="0 0 18 18"><rect x="2" y="2" width="14" height="14" rx="2" stroke="#4a8eff" stroke-width="1.5"/><path d="M9 6v6M6 9h6" stroke="#4a8eff" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <div class="ac-title">오늘 일지 자동 생성</div>
+            <div class="ac-desc">클릭 한 번으로 오늘 날짜의 데일리 노트 페이지를 자동 생성합니다. No. 자동 증가 포함.</div>
+            <div class="ac-badge" style="background:rgba(74,142,255,0.15);color:var(--blue)">날짜 자동 입력</div>
+          </div>
+          <div class="action-card" onclick="runAutoBtn('care-complete')">
+            <div class="ac-icon" style="background:rgba(62,207,142,0.15)"><svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M3.5 9.5l4 4 7-7" stroke="#3ecf8e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="ac-title">Care Note 완료 처리</div>
+            <div class="ac-desc">전화·SNS·선물·손편지 4가지 체크박스를 한 번에 완료 처리합니다.</div>
+            <div class="ac-badge" style="background:rgba(62,207,142,0.15);color:var(--green)">체크박스 일괄 처리</div>
+          </div>
+          <div class="action-card" onclick="runAutoBtn('tomorrow')">
+            <div class="ac-icon" style="background:rgba(245,166,35,0.15)"><svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M9 3v6l4 2" stroke="#f5a623" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="9" r="7" stroke="#f5a623" stroke-width="1.5"/></svg></div>
+            <div class="ac-title">내일 일지 미리 생성</div>
+            <div class="ac-desc">오늘 "내일 할 일" 내용을 내일 페이지로 복사해 생성합니다.</div>
+            <div class="ac-badge" style="background:rgba(245,166,35,0.15);color:var(--amber)">내일 날짜 자동</div>
+          </div>
+          <div class="action-card" onclick="runAutoBtn('monthly')">
+            <div class="ac-icon" style="background:rgba(200,169,110,0.15)"><svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M3 14l3-3 3 2 3-4 3-3" stroke="#c8a96e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="ac-title">월간 리뷰 자동 요약</div>
+            <div class="ac-desc">이달 작성된 일지를 분석해 Care Note 완료율, 인사이트 평균, 핵심 성과를 자동 요약합니다.</div>
+            <div class="ac-badge" style="background:rgba(200,169,110,0.15);color:var(--accent)">AI 요약 생성</div>
+          </div>
+        </div>
+
+        <div style="background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:16px">
+          <div class="sec-title" style="margin-bottom:12px">노션 버튼 설정 코드</div>
+          <div style="background:var(--bg);border:1px solid var(--line2);border-radius:var(--r2);padding:14px;font-size:11px;font-family:'DM Mono',monospace;color:var(--txt2);line-height:1.9;white-space:pre-wrap" id="notion-code">버튼 카드를 클릭하면 노션 설정 코드가 여기 표시됩니다.</div>
+          <button class="tbtn" style="margin-top:10px" onclick="copyCode()">코드 복사</button>
+        </div>
+      </div>
+
+      <!-- TAGS -->
+      <div id="panel-tags" class="panel">
+        <div class="tag-section">
+          <div class="tag-section-title">고객 등급 태그</div>
+          <div class="tag-cloud" id="tags-grade"></div>
+        </div>
+        <div class="tag-section">
+          <div class="tag-section-title">상권/지역 태그</div>
+          <div class="tag-cloud" id="tags-area"></div>
+        </div>
+        <div class="tag-section">
+          <div class="tag-section-title">품목/업무 태그</div>
+          <div class="tag-cloud" id="tags-item"></div>
+        </div>
+        <div class="tag-section">
+          <div class="tag-section-title">인맥 태그</div>
+          <div class="tag-cloud" id="tags-people"></div>
+        </div>
+        <div class="tag-section">
+          <div class="tag-section-title">커스텀 태그 추가</div>
+          <div class="tag-add">
+            <input class="tag-inp" id="custom-tag-inp" placeholder="새 태그 입력..."/>
+            <button class="tbtn primary" onclick="addCustomTag()">추가</button>
+          </div>
+          <div class="tag-cloud" id="tags-custom" style="margin-top:10px"></div>
+        </div>
+        <div style="background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-top:4px">
+          <div class="sec-title" style="margin-bottom:8px">노션 태그 연동 방법</div>
+          <div style="font-size:12px;color:var(--txt3);line-height:1.9">
+            1. 노션 데이터베이스 → 속성 추가 → <strong style="color:var(--txt)">Multi-select</strong> 선택<br/>
+            2. 속성 이름: <strong style="color:var(--accent)">태그</strong><br/>
+            3. 위 태그들을 옵션으로 미리 추가<br/>
+            4. "노션에 복사" 버튼 클릭 시 태그 목록이 함께 복사됩니다
+          </div>
+        </div>
+      </div>
+
+      <!-- REVIEW -->
+      <div id="panel-review" class="panel">
+        <div class="month-sel" id="month-sel"></div>
+        <div class="review-card" id="review-card">
+          <div class="review-meta">
+            <span class="review-month" id="review-month-label"></span>
+            <span class="review-tag">월간 리뷰</span>
+          </div>
+          <div class="review-body" id="review-body">월을 선택하면 저장된 데이터를 기반으로 월간 리뷰가 생성됩니다.</div>
+          <div class="review-kpi">
+            <div class="kpi-item"><div class="kpi-val" id="kpi-days">0</div><div class="kpi-label">작성 일수</div></div>
+            <div class="kpi-item"><div class="kpi-val" id="kpi-care">0%</div><div class="kpi-label">Care Note 완료율</div></div>
+            <div class="kpi-item"><div class="kpi-val" id="kpi-avg">0.0</div><div class="kpi-label">인사이트 평균</div></div>
+          </div>
+        </div>
+        <button class="tbtn primary" onclick="generateReview()" style="margin-bottom:14px">AI 월간 리뷰 생성 ↗</button>
+        <div style="background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:14px;font-size:12px;color:var(--txt3);line-height:1.8">
+          <strong style="color:var(--txt)">노션 자동화 연동:</strong> 노션 버튼 패널에서 "월간 리뷰 자동 요약" 버튼을 설정하면,<br/>
+          매월 말 버튼 클릭 한 번으로 노션 내 월간 리뷰 페이지가 자동 생성됩니다.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFY -->
+<div class="notify" id="notify"><span class="notify-icon">✓</span><span id="notify-text"></span></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+// DATE
+const now = new Date();
+const pad = n => String(n).padStart(2,'0');
+const fmtDate = d => `${d.getFullYear()}.${pad(d.getMonth()+1)}.${pad(d.getDate())}`;
+document.getElementById('brand-date').textContent = fmtDate(now) + ' ' + ['일','월','화','수','목','금','토'][now.getDay()] + '요일';
+
+// STORAGE
+function getEntries(){try{return JSON.parse(localStorage.getItem('pm_entries_v2')||'[]');}catch{return [];}}
+function setEntries(a){localStorage.setItem('pm_entries_v2',JSON.stringify(a));}
+function getTags(){try{return JSON.parse(localStorage.getItem('pm_tags')||'{}');}catch{return {};}}
+function setTags(o){localStorage.setItem('pm_tags',JSON.stringify(o));}
+
+// NOTIFY
+function notify(msg){
+  const el=document.getElementById('notify');
+  document.getElementById('notify-text').textContent=msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+// NAV
+const pageMeta={
+  overview:['개요','전체 활동 현황'],
+  history:['일지 기록','전체 작성 내역'],
+  calendar:['캘린더','날짜별 작성 현황'],
+  buttons:['버튼 자동화','노션 자동화 설정'],
+  tags:['고객/인맥 태그','태그 관리 및 연동'],
+  review:['월간 리뷰','월별 성과 요약']
+};
+function gotoPanel(name, navEl){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  if(navEl){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));navEl.classList.add('active');}
+  const m=pageMeta[name]||[name,''];
+  document.getElementById('page-title').textContent=m[0];
+  document.getElementById('page-sub').textContent=m[1];
+  if(name==='overview') renderOverview();
+  if(name==='history') renderHistory();
+  if(name==='calendar') renderCalendar();
+  if(name==='tags') renderTags();
+  if(name==='review') renderReview();
+}
+
+// STREAK
+function calcStreak(){
+  const arr=getEntries();
+  if(!arr.length) return 0;
+  let s=0;
+  const today=new Date(); today.setHours(0,0,0,0);
+  for(let i=0;i<arr.length;i++){
+    const ep=new Date(arr[i].ts); ep.setHours(0,0,0,0);
+    if(Math.round((today-ep)/86400000)===i) s++; else break;
+  }
+  return s;
+}
+document.getElementById('streak-num').textContent=calcStreak();
+
+// OVERVIEW
+let insightChart=null;
+function renderOverview(){
+  const arr=getEntries();
+  document.getElementById('ov-total').textContent=arr.length;
+  const careDone=arr.filter(e=>e.letter&&e.calls>=5&&e.sns>=5&&e.gifts>=5).length;
+  document.getElementById('ov-care').textContent=careDone;
+  const avgI=arr.length?(Math.round(arr.reduce((s,e)=>s+e.insight,0)/arr.length*10)/10).toFixed(1):'0.0';
+  document.getElementById('ov-insight').textContent=avgI;
+  const thisMonth=now.getMonth(); const thisYear=now.getFullYear();
+  const mCount=arr.filter(e=>{const d=new Date(e.ts);return d.getMonth()===thisMonth&&d.getFullYear()===thisYear;}).length;
+  document.getElementById('ov-month').textContent=mCount;
+
+  const n=arr.length||1;
+  const setPb=(id,pp,val)=>{const pct=Math.round(val/n*100);document.getElementById(id).style.width=pct+'%';document.getElementById(pp).textContent=pct+'%';};
+  setPb('cb-letter','cp-letter',arr.filter(e=>e.letter).length);
+  setPb('cb-call','cp-call',arr.filter(e=>e.calls>=5).length);
+  setPb('cb-sns','cp-sns',arr.filter(e=>e.sns>=5).length);
+  setPb('cb-gift','cp-gift',arr.filter(e=>e.gifts>=5).length);
+
+  // 7일 차트
+  const days7=[]; const labels7=[];
+  for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(d.getDate()-i);labels7.push(pad(d.getMonth()+1)+'/'+pad(d.getDate()));const ds=fmtDate(d);const e=arr.find(x=>x.date===ds);days7.push(e?e.insight:null);}
+  const ctx=document.getElementById('chart-insight').getContext('2d');
+  if(insightChart) insightChart.destroy();
+  insightChart=new Chart(ctx,{type:'line',data:{labels:labels7,datasets:[{data:days7,borderColor:'#c8a96e',backgroundColor:'rgba(200,169,110,0.1)',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'#c8a96e',tension:0.3,spanGaps:true}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{min:0,max:5,ticks:{color:'#5c6070',font:{size:10},stepSize:1},grid:{color:'rgba(255,255,255,0.04)'}},x:{ticks:{color:'#5c6070',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+
+  // recent
+  const tbody=document.getElementById('ov-tbody');
+  if(!arr.length){tbody.innerHTML='<tr><td colspan="5" style="color:var(--txt3);text-align:center;padding:20px">아직 저장된 일지가 없습니다.</td></tr>';return;}
+  tbody.innerHTML=arr.slice(0,5).map(e=>{
+    const done=e.letter&&e.calls>=5&&e.sns>=5&&e.gifts>=5;
+    const partial=e.letter||e.calls>0||e.sns>0||e.gifts>0;
+    const b=done?'<span class="badge b-done">완료</span>':partial?'<span class="badge b-part">일부</span>':'<span class="badge b-none">미완</span>';
+    return `<tr><td>${e.date}</td><td style="font-family:'DM Mono',monospace">${e.no}</td><td style="font-family:'DM Mono',monospace">${e.insight}/5</td><td>${b}</td><td style="max-width:180px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${e.result||'—'}</td></tr>`;
+  }).join('');
+}
+
+// HISTORY
+function renderHistory(){
+  const q=(document.getElementById('hist-search')||{}).value||'';
+  const arr=getEntries().filter(e=>!q||(e.date.includes(q)||(e.result||'').includes(q)));
+  const tbody=document.getElementById('hist-tbody');
+  if(!arr.length){tbody.innerHTML='<tr><td colspan="9" style="color:var(--txt3);text-align:center;padding:20px">기록 없음</td></tr>';return;}
+  tbody.innerHTML=arr.map((e,i)=>{
+    const done=e.letter&&e.calls>=5&&e.sns>=5&&e.gifts>=5;
+    const partial=e.letter||e.calls>0||e.sns>0||e.gifts>0;
+    const b=done?'<span class="badge b-done">완료</span>':partial?'<span class="badge b-part">일부</span>':'<span class="badge b-none">미완</span>';
+    return `<tr><td>${e.date}</td><td style="font-family:'DM Mono'">${e.no}</td><td style="font-family:'DM Mono'">${e.insight}/5</td><td style="font-family:'DM Mono'">${e.calls}/5</td><td style="font-family:'DM Mono'">${e.sns}/5</td><td style="font-family:'DM Mono'">${e.gifts}/5</td><td>${b}</td><td style="max-width:140px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${e.result||'—'}</td><td><button class="sec-action" style="color:var(--red)" onclick="deleteEntry(${i})">삭제</button></td></tr>`;
+  }).join('');
+}
+function deleteEntry(idx){
+  const arr=getEntries(); arr.splice(idx,1); setEntries(arr); renderHistory(); notify('삭제되었습니다.');
+}
+
+// CALENDAR
+let calYear=now.getFullYear(), calMonth=now.getMonth();
+function changeMonth(d){calMonth+=d;if(calMonth<0){calMonth=11;calYear--;}if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
+function renderCalendar(){
+  const arr=getEntries();
+  const label=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  document.getElementById('cal-month-label').textContent=`${calYear}년 ${label[calMonth]}`;
+  const first=new Date(calYear,calMonth,1).getDay();
+  const days=new Date(calYear,calMonth+1,0).getDate();
+  const cal=document.getElementById('mini-cal');
+  const heads=['일','월','화','수','목','금','토'].map(h=>`<div class="cal-head">${h}</div>`).join('');
+  let cells=heads;
+  for(let i=0;i<first;i++) cells+=`<div class="cal-day empty"></div>`;
+  for(let d=1;d<=days;d++){
+    const ds=`${calYear}.${pad(calMonth+1)}.${pad(d)}`;
+    const entry=arr.find(e=>e.date===ds);
+    const isToday=ds===fmtDate(now);
+    const cls=isToday?'cal-day today':entry?'cal-day has-entry':'cal-day';
+    cells+=`<div class="${cls}" onclick="showCalDetail('${ds}')">${d}</div>`;
+  }
+  cal.innerHTML=cells;
+}
+function showCalDetail(ds){
+  const arr=getEntries(); const e=arr.find(x=>x.date===ds);
+  const det=document.getElementById('cal-detail');
+  const detDate=document.getElementById('cal-detail-date');
+  const detBody=document.getElementById('cal-detail-body');
+  det.style.display='block';
+  detDate.textContent=ds;
+  if(!e){detBody.textContent='작성된 일지가 없습니다.';return;}
+  detBody.innerHTML=`<span style="color:var(--accent)">인사이트</span> ${e.insight}/5 &nbsp;·&nbsp; <span style="color:var(--blue)">전화</span> ${e.calls}/5 &nbsp;·&nbsp; <span style="color:var(--green)">SNS</span> ${e.sns}/5 &nbsp;·&nbsp; <span style="color:var(--amber)">선물</span> ${e.gifts}/5<br/><span style="color:var(--txt3)">성과:</span> ${e.result||'—'}<br/><span style="color:var(--txt3)">내일:</span> ${e.tomorrow||'—'}`;
+}
+
+// TAGS
+const defaultTags={
+  grade:['VIP 고객','G라벨','S라벨','일반'],
+  area:['강남','홍대','이태원','종로','여의도','송파','잠실'],
+  item:['특수부위','갈비','삼겹살','목살','등심','클레임대응','신규개척','마진개선','온라인매출'],
+  people:['감사','협력사','소개','장기고객','신규인맥']
+};
+function renderTags(){
+  const saved=getTags();
+  const render=(id,key)=>{
+    const list=saved[key]||defaultTags[key]||[];
+    const active=saved['active_'+key]||[];
+    document.getElementById(id).innerHTML=list.map(t=>`<div class="tag ${active.includes(t)?'active':''}" onclick="toggleTag('${key}','${t}',this)">${t}<span class="tag-count">${Math.floor(Math.random()*8)+1}</span></div>`).join('');
+  };
+  render('tags-grade','grade');render('tags-area','area');render('tags-item','item');render('tags-people','people');
+  const custom=saved['custom']||[];
+  document.getElementById('tags-custom').innerHTML=custom.map(t=>`<div class="tag" onclick="removeCustomTag('${t}')">${t} ×</div>`).join('');
+}
+function toggleTag(key,tag,el){
+  const saved=getTags();
+  let a=saved['active_'+key]||[];
+  if(a.includes(tag)) a=a.filter(x=>x!==tag); else a.push(tag);
+  saved['active_'+key]=a; setTags(saved);
+  el.classList.toggle('active');
+}
+function addCustomTag(){
+  const inp=document.getElementById('custom-tag-inp');
+  const val=inp.value.trim(); if(!val) return;
+  const saved=getTags(); const c=saved['custom']||[];
+  if(!c.includes(val)){c.push(val);saved['custom']=c;setTags(saved);}
+  inp.value=''; renderTags(); notify(`태그 "` + val + `" 추가됨`);
+}
+function removeCustomTag(tag){
+  const saved=getTags(); saved['custom']=(saved['custom']||[]).filter(x=>x!==tag);
+  setTags(saved); renderTags();
+}
+
+// REVIEW
+let selectedReviewMonth=now.getMonth();
+function renderReview(){
+  const months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const sel=document.getElementById('month-sel');
+  sel.innerHTML=months.map((m,i)=>`<button class="msel-btn ${i===selectedReviewMonth?'active':''}" onclick="selectReviewMonth(${i})">${m}</button>`).join('');
+  buildReview(selectedReviewMonth);
+}
+function selectReviewMonth(m){selectedReviewMonth=m;renderReview();}
+function buildReview(m){
+  const arr=getEntries().filter(e=>{const d=new Date(e.ts);return d.getMonth()===m&&d.getFullYear()===now.getFullYear();});
+  const months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  document.getElementById('review-month-label').textContent=`${now.getFullYear()}.${pad(m+1)}`;
+  document.getElementById('kpi-days').textContent=arr.length;
+  const careRate=arr.length?Math.round(arr.filter(e=>e.letter&&e.calls>=5&&e.sns>=5&&e.gifts>=5).length/arr.length*100):0;
+  document.getElementById('kpi-care').textContent=careRate+'%';
+  const avgI=arr.length?(arr.reduce((s,e)=>s+e.insight,0)/arr.length).toFixed(1):'0.0';
+  document.getElementById('kpi-avg').textContent=avgI;
+  if(!arr.length){document.getElementById('review-body').textContent=`${months[m]}에 작성된 일지가 없습니다.`;return;}
+  document.getElementById('review-body').textContent=`${months[m]} 총 ${arr.length}일 작성 · Care Note 완료율 ${careRate}% · 평균 인사이트 ${avgI}/5\n\n전화 평균: ${(arr.reduce((s,e)=>s+e.calls,0)/arr.length).toFixed(1)}/5명\nSNS 평균: ${(arr.reduce((s,e)=>s+e.sns,0)/arr.length).toFixed(1)}/5명\n선물 평균: ${(arr.reduce((s,e)=>s+e.gifts,0)/arr.length).toFixed(1)}/5명\n\n"AI 월간 리뷰 생성" 버튼을 클릭하면 Claude가 이달 활동을 분석하고 다음 달 전략을 제안해 드립니다.`;
+}
+function generateReview(){
+  const arr=getEntries().filter(e=>{const d=new Date(e.ts);return d.getMonth()===selectedReviewMonth&&d.getFullYear()===now.getFullYear();});
+  const months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const careRate=arr.length?Math.round(arr.filter(e=>e.letter&&e.calls>=5&&e.sns>=5&&e.gifts>=5).length/arr.length*100):0;
+  const avgI=arr.length?(arr.reduce((s,e)=>s+e.insight,0)/arr.length).toFixed(1):'0';
+  window.sendPrompt(`화정고기 포스트맨 ${months[selectedReviewMonth]} 월간 리뷰를 작성해줘.\n\n데이터:\n- 작성 일수: ${arr.length}일\n- Care Note 완료율: ${careRate}%\n- 평균 인사이트 점수: ${avgI}/5\n- 전화 평균: ${arr.length?(arr.reduce((s,e)=>s+e.calls,0)/arr.length).toFixed(1):0}/5명\n- SNS 평균: ${arr.length?(arr.reduce((s,e)=>s+e.sns,0)/arr.length).toFixed(1):0}/5명\n\n이달 잘한 점, 아쉬운 점, 다음 달 개선 포인트를 화정고기 축산 유통업 맥락에서 분석해줘.`);
+}
+
+// BUTTONS
+const btnCodes={
+  'new-entry':`[노션 버튼 설정: 오늘 일지 자동 생성]
+
+버튼 이름: "📝 오늘 일지 시작"
+아이콘: 📝
+
+액션 1 — 데이터베이스에 페이지 추가
+  대상 DB: Postman Daily Note
+  설정 값:
+    날짜 → @Today (오늘 날짜 자동)
+    No. → (수동 입력 또는 Formula로 자동화)
+
+액션 2 — 페이지 열기
+  → 방금 생성된 페이지를 바로 열기
+
+Tips: 버튼을 홈 화면 또는 사이드바에 고정해두세요.`,
+  'care-complete':`[노션 버튼 설정: Care Note 완료 처리]
+
+버튼 이름: "✅ Care Note 완료"
+아이콘: ✅
+
+액션 1 — 현재 페이지 수정
+  Care Note 완료 → ☑ true (체크)
+  전화 완료 → ☑ true
+  SNS 완료 → ☑ true
+  선물 완료 → ☑ true
+
+Tips: 각 일지 페이지 상단 콜아웃 옆에 배치하세요.`,
+  'tomorrow':`[노션 버튼 설정: 내일 일지 미리 생성]
+
+버튼 이름: "⏭ 내일 페이지 생성"
+아이콘: ⏭
+
+액션 1 — 데이터베이스에 페이지 추가
+  대상 DB: Postman Daily Note
+  설정 값:
+    날짜 → @Today + 1 (내일 날짜)
+
+액션 2 — 현재 페이지에서 속성 복사
+  "내일 할 일" 텍스트 → 새 페이지 상단에 삽입
+
+Tips: 오늘 일지 마무리 시 클릭. 내일 열면 할 일이 미리 적혀있습니다.`,
+  'monthly':`[노션 버튼 설정: 월간 리뷰 자동 요약]
+
+버튼 이름: "📊 월간 리뷰 생성"
+아이콘: 📊
+
+액션 1 — 데이터베이스에 페이지 추가
+  대상 DB: 월간 리뷰 DB (별도 생성 권장)
+  설정 값:
+    월 → 이번 달 (수동 또는 Formula)
+
+액션 2 — Notion AI 요약 실행
+  소스: Postman Daily Note DB
+  필터: 날짜가 이번 달 안
+  프롬프트:
+    "Care Note 완료율, 평균 인사이트,
+     핵심 성과를 표 형태로 요약해줘"
+
+Tips: 매월 마지막 날 실행을 권장합니다.`
+};
+function runAutoBtn(key){
+  document.getElementById('notion-code').textContent=btnCodes[key];
+  notify('설정 코드가 표시되었습니다.');
+}
+function copyCode(){
+  navigator.clipboard.writeText(document.getElementById('notion-code').textContent).then(()=>notify('복사되었습니다. 노션에 붙여넣기 하세요.'));
+}
+
+// NEW ENTRY (demo)
+function newEntry(){
+  const date=fmtDate(now);
+  const arr=getEntries();
+  if(arr.find(e=>e.date===date)){notify('오늘 일지가 이미 저장되어 있습니다.');return;}
+  const entry={date,no:String(arr.length+1).padStart(3,'0'),insight:3,letter:false,calls:0,sns:0,gifts:0,result:'',tomorrow:'',ts:Date.now()};
+  arr.unshift(entry); setEntries(arr);
+  notify('오늘 일지 페이지가 생성되었습니다!');
+  renderOverview();
+  document.getElementById('streak-num').textContent=calcStreak();
+}
+
+// EXPORT
+function exportCSV(){
+  const arr=getEntries();
+  if(!arr.length){notify('저장된 기록이 없습니다.');return;}
+  const rows=['날짜,No.,인사이트,전화,SNS,선물,성과,내일할일',...arr.map(e=>`${e.date},${e.no},${e.insight},${e.calls},${e.sns},${e.gifts},"${e.result}","${e.tomorrow}"`)];
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));
+  a.download=`postman_${fmtDate(now)}.csv`; a.click();
+  notify('CSV 파일이 다운로드됩니다.');
+}
+
+// INIT
+renderOverview();
+renderCalendar();
+</script>
+</body>
+</html>
